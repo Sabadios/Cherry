@@ -1,0 +1,30 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns = "http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:weld = "http://jboss.org/schema/weld/beans"  
+  xsi:schemaLocation = "http://xmlns.jcp.org/xml/ns/javaee 
+                          http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd
+                        http://jboss.org/schema/weld/beans 
+                          http://jboss.org/schema/weld/beans_1_1.xsd">
+  <decorators>
+    <class>org.jboss.weld.environment.se.threading.RunnableDecorator</class>
+  </decorators>          
+  
+  <weld:scan>
+    <weld:exclude name = "org.jboss**" />
+    <weld:exclude name = "org.apache**" />
+    <weld:exclude name = "freemarker**" />
+    <weld:exclude name = "jersey**" />
+    <weld:exclude name = "com.fasterxml**" />
+    <weld:exclude name = "org.glassfish**" />
+    <weld:exclude name = "com.mongodb**" />    
+    <weld:exclude name = "org.joda**" />      
+    <weld:exclude name = "org.junit**" />     
+    <weld:exclude name = "com.google**" />     
+    <weld:exclude name = "com.sun**" />        
+    <weld:exclude name = "com.hazelcast**" />    
+    <weld:exclude name = "ch.qos.logback**" /> 
+    <weld:exclude name = "org.slf4j**" /> 
+  </weld:scan> 
+</beans>
