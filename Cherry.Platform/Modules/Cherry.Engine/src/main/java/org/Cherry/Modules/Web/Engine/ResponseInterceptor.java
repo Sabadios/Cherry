@@ -86,7 +86,7 @@ class ResponseInterceptor extends ServiceTemplate implements HttpResponseInterce
         cookie.get().setVersion(getSessionCookieVersion());
         cookie.get().setExpiryDate(new DateTime().plusMinutes(getSessionCookieTimeToLive().intValue()).toDate());
 
-        bResponse.addHeader(Set_Cookie, cookie.toString());
+        bResponse.addHeader(Set_Cookie, cookie.get().toString());
       }
     }
   }
