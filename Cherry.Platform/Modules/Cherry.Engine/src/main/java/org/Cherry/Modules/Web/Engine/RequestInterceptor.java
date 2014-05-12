@@ -69,15 +69,13 @@ class RequestInterceptor extends ServiceTemplate implements HttpRequestIntercept
     log.debug("Intercepted request [{}] with URI [{}] for context [{}].", request, request.getRequestLine().getUri(), context);
 
     if (request instanceof BasicHttpRequest) {
-      final BasicHttpRequest bRequest = (BasicHttpRequest) request;
-
       if (isDebugEnabled())
-        getTracerService().examine(bRequest);
+        getTracerService().examine(request);
 
-      if (bRequest.getRequestLine().getUri().equals(getSessionCookiePath())) {
+      if (isSessionCookiePathHit(request)) {
         context.setAttribute(Session_Cookie_Path_Hit, Boolean.TRUE);
 
-        final WeakReference<HeaderIterator> headerIterator = new WeakReference<HeaderIterator>(bRequest.headerIterator(Cookie));
+        final WeakReference<HeaderIterator> headerIterator = new WeakReference<HeaderIterator>(request.headerIterator(Cookie));
 
         Header header;
         HeaderElement[] elements;
@@ -104,6 +102,14 @@ class RequestInterceptor extends ServiceTemplate implements HttpRequestIntercept
 
     context.setAttribute(Session_Cookie_Present, Boolean.FALSE);
   }
+
+  private Boolean isSessionCookiePathHit(final HttpRequest request) {
+    final String regex = new StringBuilder(getSessionCookiePath()).append(REGEX_PATTERN).toString();
+    final WeakReference<String> path = new WeakReference<String>(regex);
+    return request.getRequestLine().getUri().matches(path.get());
+  }
+
+  private static final String REGEX_PATTERN = ".*";
 
   private Boolean isTampered(final String value) {
     return false;

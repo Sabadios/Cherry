@@ -51,7 +51,7 @@ import com.hazelcast.core.IMap;
  * 
  */
 @Singleton
-class SessionManager extends ServiceTemplate {
+public class SessionManager extends ServiceTemplate {
   Boolean isActive(final UUID jSessionID) {
     return getHazelcastService().getMap(getSessionCookie()).containsKey(jSessionID);
   }

@@ -52,42 +52,38 @@ import org.Cherry.Modules.Web.BasicServerCookie;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
-import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.protocol.HttpContext;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 
 /**
  * @author Cristian.Malinescu
- * 
+ *
  */
 @Singleton
 class ResponseInterceptor extends ServiceTemplate implements HttpResponseInterceptor {
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see org.apache.http.HttpResponseInterceptor#process(org.apache.http.HttpResponse, org.apache.http.protocol.HttpContext)
    */
   @Override
   public void process(final HttpResponse response, final HttpContext context) throws HttpException, IOException {
     log.debug("Intercepted response [{}] for context [{}].", response, context);
 
-    if (response instanceof BasicHttpResponse) {
-      final BasicHttpResponse bResponse = (BasicHttpResponse) response;
+    final Boolean sessionCookiePresent = (Boolean) context.getAttribute(Session_Cookie_Present), sessionCookiePathHit = (Boolean) context.getAttribute(Session_Cookie_Path_Hit);
 
-      final Boolean sessionCookiePresent = (Boolean) context.getAttribute(Session_Cookie_Present), sessionCookiePathHit = (Boolean) context.getAttribute(Session_Cookie_Path_Hit);
+    if (!sessionCookiePresent && sessionCookiePathHit) {
+      final WeakReference<BasicServerCookie> cookie =
+          new WeakReference<BasicServerCookie>(new BasicServerCookie(getSessionCookie(),
+                                                                     getServerSessions() ? getSession().toString() : UUID.randomUUID().toString()));
 
-      if (!sessionCookiePresent && sessionCookiePathHit) {
-        final WeakReference<BasicServerCookie> cookie = new WeakReference<BasicServerCookie>(new BasicServerCookie(getSessionCookie(),
-            getServerSessions() ? getSession().toString() : UUID.randomUUID().toString()));
+      cookie.get().setDomain(getSessionCookieDomain());
+      cookie.get().setPath(getSessionCookiePath());
+      cookie.get().setVersion(getSessionCookieVersion());
+      cookie.get().setExpiryDate(new DateTime().plusMinutes(getSessionCookieTimeToLive().intValue()).toDate());
 
-        cookie.get().setDomain(getSessionCookieDomain());
-        cookie.get().setPath(getSessionCookiePath());
-        cookie.get().setVersion(getSessionCookieVersion());
-        cookie.get().setExpiryDate(new DateTime().plusMinutes(getSessionCookieTimeToLive().intValue()).toDate());
-
-        bResponse.addHeader(Set_Cookie, cookie.get().toString());
-      }
+      response.addHeader(Set_Cookie, cookie.get().toString());
     }
   }
 
