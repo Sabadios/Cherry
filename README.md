@@ -218,6 +218,10 @@ public final class UserService extends ServiceTemplate {
   Cherry noSX engine currently runs in classic multhithreaded mode however a top priority is to add in the next releases support for a runtime using the Actor model (Akka maybe). Both execution models will be supported and the choice of launching one or the other will be left at the decision of the user trough a configurable setting. This dual nature will be supported to accomodate application heterogenous requirements - some applications are desired to run in a classic, multhithreaded runtime others require the opposite, an Actor style architecture.
   
   More to follow.
+  
+* Updates:
+  * We applied for Maven Central hosting!
+
  
 
 
