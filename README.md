@@ -13,6 +13,7 @@ Welcome to Cherry NoSQL/NoXML Framework - the name for genuine simplicity in Jav
    * Hazelcast primarly for caching and/or - highly not recommended!, server side stateful data.
    * More goodies to come in the next updates!
    
+  As easy to be noticed in the provided sample application - https://github.com/Sabadios/GoCherry, 
   
  
 
