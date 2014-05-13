@@ -203,6 +203,11 @@ public final class UserService extends ServiceTemplate {
 }
 
 ```
+
+  Due to its stateless, lightweight architecture a Cherry Web application process scales extremely well even in classic, multhithreaded mode. In a simulated environemnt on an average laptop tens of thousands of concurrent clients were handled with no sweating never passing CPU usage over 20% and with less than 0.75G memory, after the clients shutdown memory usage dropped fast at around 0.25G and not even a single request dropped! This makes Cherry noSX an ideal runtime to develop Java Web applications meant to be deployed in virtualized or cloud environments, run from an USB stick or even from portable devices! 
+  Cherry noSX engine currently runs in classic multhithreaded mode however a top priority is to add in the next releases support for a runtime using the Actor model (Akka maybe). Both execution models will be supported and the choice of launching one or the other will be left at the decision of the user trough a configurable setting. This dual nature will be supported to accomodate application heterogenous requirements - some applications are desired to run in a classic, multhithreaded runtime others require the opposite, an Actor style architecture.
+  
+  More to follow.
  
 
 
