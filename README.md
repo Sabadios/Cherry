@@ -2,6 +2,8 @@ Welcome to Cherry NoSQL/NoXML Framework - the name for genuine simplicity in Jav
 
  Cherry noSX is a tiny active kernel who's primary role is to glue together the best-of-breed open-source Java libraries for delivering Java Web applications equivalent results-wise to their JEE counterparts but without the JEE bloath.  
 
+  That's right - good old style JAR deployments without the mess and headache of WARs, EARs no Tomcat, Jetty, JBoss, Websphere, Weblogic etc. - complete freedom from runtimes and specifications provided by vendors forcing you to follow their interest - the whole Web & HTTP at your hands in Java so you can easily and fast deliver web applications making use first-hand of the best and most powerful HTTP and HTML features and not waiting for vendor X to support them!
+
    For developing Cherry powered Java Web applications a developer needs hands-on experience with following technologies: 
  * Core
    * Java 7+
