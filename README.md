@@ -1,4 +1,4 @@
-Welcome to Cherry noSX (NoSQL/NoXML) Framework - the name for genuine simplicity in Java Web development!
+Welcome to Cherry noSX (NoSQL/NoXML - 'no Excess') Framework - the name for genuine simplicity in Java Web development!
 
  Cherry noSX is a tiny active kernel who's primary role is to glue together the best-of-breed open-source Java libraries for delivering Java Web applications equivalent results-wise to their JEE counterparts but without the JEE bloath.  
 
