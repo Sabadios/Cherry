@@ -6,6 +6,7 @@ Welcome to Cherry NoSQL/NoXML Framework - the name for genuine simplicity in Jav
  * Core
    * Java 7+
    * Dependencies injection Spring or EJB3/CDI style (JBoss Weld)
+   * Natural HTML templating (Freemarker)
    * JSON, JAX-RS Spring or EJB3 style controllers (Jackson)
    * Build and packaging  - JAR, ZIP etc. with Maven
  * Extensions
