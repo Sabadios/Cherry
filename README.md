@@ -15,6 +15,8 @@ Welcome to Cherry NoSQL/NoXML Framework - the name for genuine simplicity in Jav
    * More goodies to come in the next updates!
    
   As easy to be noticed in the provided sample application - https://github.com/Sabadios/GoCherry, a Cherry Web Agent resembles a Spring MVC or EJB3 controller, so theorethically porting a controller from Spring or EJB3 to Cherry should be easy and smooth as long as the code doesn't have compile or runtime dependencies on Spring API or JEE application server API.  
+
+  None of the org.Cherry* API imports are actually required to realize the functionality, in the provided sample they are used only as convenient helpers/utils. 
   
 ```java
 /*******************************************************************************
