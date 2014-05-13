@@ -1,8 +1,13 @@
-Welcome to Cherry NoSQL/NoXML Framework - the name for genuine simplicity in Java Web development!
+Welcome to Cherry noSX (NoSQL/NoXML) Framework - the name for genuine simplicity in Java Web development!
 
  Cherry noSX is a tiny active kernel who's primary role is to glue together the best-of-breed open-source Java libraries for delivering Java Web applications equivalent results-wise to their JEE counterparts but without the JEE bloath.  
 
   That's right - good old style JAR deployments without the mess and headache of WARs, EARs no Tomcat, Jetty, JBoss, Websphere, Weblogic etc. - complete freedom from runtimes and specifications provided by vendors forcing you to follow their interest - the whole Web & HTTP at your hands in Java so you can easily and fast deliver web applications making use first-hand of the best and most powerful HTTP and HTML features and not waiting for vendor X to support them!
+  
+  And another goodie - bye-bye XML, hasta la vista SQL! It is an industry acknowledged fact that by a far margin the most implementation time/effort is spent in the data formats bi-directional transformations due to paradigm incompatibilities of the XML, SQL and the Web-fit optimal data models. Also the same data formats bi-directional transformations are the main culprit on performance impact and resource eating hogs by a far margin comparing with other subsystems tipical to Web Applications. Then, the simple-natural-logical question is - why anymore XML and SQL when we have today the proper technologies and data formats to fit optimally the Web Application paradigm?!
+  
+  Cherry noSX goes even further - even configuration wise it is using the Web-fit JSON data format, no more XML configurations and deployment descriptor hasle! Only due to usage of Maven XML is stil present but only at build time.
+The choice of using Maven was made due to Maven popularity and existing skill set on the market and wanting to help adopters migrate smoothly in line with the framework philosophy of simplicity and 0/'no learning curve' principle. 
 
    For developing Cherry powered Java Web applications a developer needs hands-on experience with following technologies: 
  * Core
