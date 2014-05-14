@@ -60,92 +60,92 @@ import org.Cherry.Main.ApplicationRepositoryService;
 @Singleton
 public class ConfigurationService extends ServiceTemplate {
   public Integer getHttpPort() {
-    if (null != getConfiguration().getHttpPort())
-      return getConfiguration().getHttpPort();
+    if (null != getConfiguration().getWeb().getHttpPort())
+      return getConfiguration().getWeb().getHttpPort();
 
     return _httpPort;
   }
 
   public String getDocRoot() {
-    if (isNotEmpty(getConfiguration().getDocRoot()))
-      return getConfiguration().getDocRoot();
+    if (isNotEmpty(getConfiguration().getWeb().getDocRoot()))
+      return getConfiguration().getWeb().getDocRoot();
 
     return DOC_ROOT;
   }
 
   public String getWelcomeDoc() {
-    if (isNotEmpty(getConfiguration().getWelcomeDoc()))
-      return getConfiguration().getWelcomeDoc();
+    if (isNotEmpty(getConfiguration().getWeb().getWelcomeDoc()))
+      return getConfiguration().getWeb().getWelcomeDoc();
 
     return WELCOME_DOC;
   }
 
   public String getSessionCookie() {
-    if (isNotEmpty(getConfiguration().getSessionCookie()))
-      return getConfiguration().getSessionCookie();
+    if (isNotEmpty(getConfiguration().getWeb().getCookie().getName()))
+      return getConfiguration().getWeb().getCookie().getName();
 
     return SESSION_COOKIE;
   }
 
   public String getCookieDomain() {
-    if (isNotEmpty(getConfiguration().getCookieDomain()))
-      return getConfiguration().getCookieDomain();
+    if (isNotEmpty(getConfiguration().getWeb().getCookie().getDomain()))
+      return getConfiguration().getWeb().getCookie().getDomain();
 
     return COOKIE_DOMAIN;
   }
 
   public Integer getCookieVersion() {
-    if (isPositive(getConfiguration().getCookieVersion()))
-      return getConfiguration().getCookieVersion();
+    if (isPositive(getConfiguration().getWeb().getCookie().getVersion()))
+      return getConfiguration().getWeb().getCookie().getVersion();
 
     return COOKIE_VERSION;
   }
 
   public Long getCookieTimeToLive() {
-    if (isPositive(getConfiguration().getCookieTimeToLive()))
-      return getConfiguration().getCookieTimeToLive();
+    if (isPositive(getConfiguration().getWeb().getCookie().getTimeToLive()))
+      return getConfiguration().getWeb().getCookie().getTimeToLive();
 
     return COOKIE_TTL;
   }
 
   public String getCookiePath() {
-    if (isNotEmpty(getConfiguration().getCookiePath()))
-      return getConfiguration().getCookiePath();
+    if (isNotEmpty(getConfiguration().getWeb().getCookie().getPath()))
+      return getConfiguration().getWeb().getCookie().getPath();
 
     return COOKIE_PATH;
   }
 
   public Integer getMaxPostSize() {
-    if (isPositive(getConfiguration().getMaxPostSize()))
-      return getConfiguration().getMaxPostSize();
+    if (isPositive(getConfiguration().getWeb().getMaxPostSize()))
+      return getConfiguration().getWeb().getMaxPostSize();
 
     return MAX_POST_SIZE;
   }
 
   public Integer getCorePoolSize() {
-    if (isPositive(getConfiguration().getCorePoolSize()))
-      return getConfiguration().getCorePoolSize();
+    if (isPositive(getConfiguration().getConcurrency().getCorePoolSize()))
+      return getConfiguration().getConcurrency().getCorePoolSize();
 
     return Runtime.getRuntime().availableProcessors();
   }
 
   public Integer getMaximumPoolSize() {
-    if (isPositive(getConfiguration().getMaximumPoolSize()))
-      return getConfiguration().getMaximumPoolSize();
+    if (isPositive(getConfiguration().getConcurrency().getMaximumPoolSize()))
+      return getConfiguration().getConcurrency().getMaximumPoolSize();
 
     return Integer.MAX_VALUE;
   }
 
   public Long getKeepAliveTime() {// 60L
-    if (isPositive(getConfiguration().getKeepAliveTime()))
-      return getConfiguration().getKeepAliveTime();
+    if (isPositive(getConfiguration().getConcurrency().getKeepAliveTime()))
+      return getConfiguration().getConcurrency().getKeepAliveTime();
 
     return 60L;
   }
 
   public Boolean getServerSessions() {
-    if (null != getConfiguration().getServerSessions())
-      return getConfiguration().getServerSessions();
+    if (null != getConfiguration().getWeb().getServerSessions())
+      return getConfiguration().getWeb().getServerSessions();
 
     return false;
   }

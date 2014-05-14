@@ -33,62 +33,87 @@
 package org.Cherry.Configuration;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * @author Cristian.Malinescu
  * 
  */
-public class Configuration implements Serializable {
-  public String getProfile() {
-    return _profile;
+public class Web implements Serializable {
+  public Integer getHttpPort() {
+    return _httpPort;
   }
 
-  public void setProfile(final String profile) {
-    _profile = profile;
+  public void setHttpPort(final Integer httpPort) {
+    _httpPort = httpPort;
   }
 
-  public String getVersion() {
-    return _version;
+  public Set<String> getControllerNamespaces() {
+    return _controllerNamespaces;
   }
 
-  public void setVersion(final String version) {
-    _version = version;
+  public void setControllerNamespaces(final Set<String> controllerNamespaces) {
+    _controllerNamespaces = controllerNamespaces;
   }
 
-  public Concurrency getConcurrency() {
-    return _concurrency;
+  public String getDocRoot() {
+    return _docRoot;
   }
 
-  public void setConcurrency(final Concurrency concurrency) {
-    _concurrency = concurrency;
+  public void setDocRoot(final String docRoot) {
+    _docRoot = docRoot;
   }
+
+  public String getWelcomeDoc() {
+    return _welcomeDoc;
+  }
+
+  public void setWelcomeDoc(final String welcomeDoc) {
+    _welcomeDoc = welcomeDoc;
+  }
+
+  public Integer getMaxPostSize() {
+    return _maxPostSize;
+  }
+
+  public void setMaxPostSize(final Integer maxPostSize) {
+    _maxPostSize = maxPostSize;
+  }
+
+  public Boolean getServerSessions() {
+    return _serverSessions;
+  }
+
+  public void setServerSessions(final Boolean serverSessions) {
+    _serverSessions = serverSessions;
+  }
+
+  public Cookie getCookie() {
+    return _cookie;
+  }
+
+  public void setCookie(final Cookie cookie) {
+    _cookie = cookie;
+  }
+
+  private Cookie _cookie;
 
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("Configuration");
 
-    sb.append(" profile=[").append(getProfile()).append("], version=[").append(getVersion()).append("].");
-
     return sb.toString();
   }
 
-  public Web getWeb() {
-    return _web;
-  }
-
-  public void setWeb(final Web web) {
-    _web = web;
-  }
-
-  private Concurrency _concurrency;
-  private Web _web;
-
-  private String _profile, _version;
+  private String _docRoot, _welcomeDoc;
+  private Integer _httpPort, _maxPostSize;
+  private Boolean _serverSessions;
+  private Set<String> _controllerNamespaces;
 
   /**
    *
    */
-  public Configuration() {
+  public Web() {
   }
 
   private static final long serialVersionUID = 1L;

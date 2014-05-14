@@ -38,57 +38,47 @@ import java.io.Serializable;
  * @author Cristian.Malinescu
  * 
  */
-public class Configuration implements Serializable {
-  public String getProfile() {
-    return _profile;
+public class Concurrency implements Serializable {
+  public Integer getCorePoolSize() {
+    return _corePoolSize;
   }
 
-  public void setProfile(final String profile) {
-    _profile = profile;
+  public Integer getMaximumPoolSize() {
+    return _maximumPoolSize;
   }
 
-  public String getVersion() {
-    return _version;
+  public void setCorePoolSize(final Integer corePoolSize) {
+    _corePoolSize = corePoolSize;
   }
 
-  public void setVersion(final String version) {
-    _version = version;
+  public void setMaximumPoolSize(final Integer maximumPoolSize) {
+    _maximumPoolSize = maximumPoolSize;
   }
 
-  public Concurrency getConcurrency() {
-    return _concurrency;
+  public Long getKeepAliveTime() {// 60L
+    return _keepAliveTime;
   }
 
-  public void setConcurrency(final Concurrency concurrency) {
-    _concurrency = concurrency;
+  public void setKeepAliveTime(final Long keepAliveTime) {
+    _keepAliveTime = keepAliveTime;
   }
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("Configuration");
+    final StringBuilder sb = new StringBuilder("Concurrency");
 
-    sb.append(" profile=[").append(getProfile()).append("], version=[").append(getVersion()).append("].");
+    // sb.append(" profile=[").append(getProfile()).append("], version=[").append(getVersion()).append("].");
 
     return sb.toString();
   }
 
-  public Web getWeb() {
-    return _web;
-  }
-
-  public void setWeb(final Web web) {
-    _web = web;
-  }
-
-  private Concurrency _concurrency;
-  private Web _web;
-
-  private String _profile, _version;
+  private Integer _corePoolSize, _maximumPoolSize;
+  private Long _keepAliveTime;
 
   /**
    *
    */
-  public Configuration() {
+  public Concurrency() {
   }
 
   private static final long serialVersionUID = 1L;

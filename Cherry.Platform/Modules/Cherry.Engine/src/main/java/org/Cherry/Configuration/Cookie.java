@@ -38,57 +38,62 @@ import java.io.Serializable;
  * @author Cristian.Malinescu
  * 
  */
-public class Configuration implements Serializable {
-  public String getProfile() {
-    return _profile;
+public class Cookie implements Serializable {
+  public String getName() {
+    return _name;
   }
 
-  public void setProfile(final String profile) {
-    _profile = profile;
+  public void setName(final String name) {
+    _name = name;
   }
 
-  public String getVersion() {
+  public String getDomain() {
+    return _domain;
+  }
+
+  public void setDomain(final String domain) {
+    _domain = domain;
+  }
+
+  public Integer getVersion() {
     return _version;
   }
 
-  public void setVersion(final String version) {
+  public void setVersion(final Integer version) {
     _version = version;
   }
 
-  public Concurrency getConcurrency() {
-    return _concurrency;
+  public Long getTimeToLive() {
+    return _timeToLive;
   }
 
-  public void setConcurrency(final Concurrency concurrency) {
-    _concurrency = concurrency;
+  public void setTimeToLive(final Long timeToLive) {
+    _timeToLive = timeToLive;
+  }
+
+  public String getPath() {
+    return _path;
+  }
+
+  public void setPath(final String path) {
+    _path = path;
   }
 
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("Configuration");
 
-    sb.append(" profile=[").append(getProfile()).append("], version=[").append(getVersion()).append("].");
-
     return sb.toString();
   }
 
-  public Web getWeb() {
-    return _web;
-  }
-
-  public void setWeb(final Web web) {
-    _web = web;
-  }
-
-  private Concurrency _concurrency;
-  private Web _web;
-
-  private String _profile, _version;
+  private String _name, _domain, _path;
+  private Integer _version;
+  private Long _timeToLive;
 
   /**
    *
    */
-  public Configuration() {
+  public Cookie() {
   }
 
   private static final long serialVersionUID = 1L;
