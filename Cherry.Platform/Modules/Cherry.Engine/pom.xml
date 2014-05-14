@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
   
   <parent>
-    <groupId>Sabadios.Platform</groupId>
-    <artifactId>Cherry.Platform</artifactId>
+    <groupId>org.sabadios</groupId>
+    <artifactId>org.sabadios.cherry.platform</artifactId>
     <version>1.0.0</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>  
 
-  <artifactId>Cherry.Engine</artifactId>
+  <artifactId>org.sabadios.cherry.engine</artifactId>
   <packaging>jar</packaging>
 
   <name>Cherry.Engine</name>
