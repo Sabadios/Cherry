@@ -220,7 +220,8 @@ public final class UserService extends ServiceTemplate {
   More to follow.
   
 * Updates:
-  * We applied for Maven Central hosting!
+  * May 13th 2014 - We applied for Maven Central hosting!
+  * May 14th 2014 - Maven Central repository hosting and deployments granted!
 
  
 
