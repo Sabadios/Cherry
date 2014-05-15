@@ -30,37 +30,27 @@
  * Contributors:
  * Cristian Malinescu - initial design, API and implementation
  *******************************************************************************/
-package org.Cherry.Configuration.MongoDB;
-
-import java.util.LinkedList;
-import java.util.List;
+package org.Cherry.Configuration.Hazelcast;
 
 /**
  * @author Cristian.Malinescu
  * 
  */
-public class Mongo {
-  public List<ServerAddress> getServerAddresses() {
-    if (null == _serverAddresses)
-      _serverAddresses = new LinkedList<ServerAddress>();
-    return _serverAddresses;
+public class HazelCast {
+  public String getConfigFile() {
+    return _configFile;
   }
 
-  public void setServerAddresses(final List<ServerAddress> serverAddresses) {
-    _serverAddresses = serverAddresses;
+  public void setConfigFile(final String configFile) {
+    _configFile = configFile;
   }
 
-  public String getDbName() {
-    return _dbName;
-  }
+  private String _configFile;
 
-  public void setDbName(final String dbName) {
-    _dbName = dbName;
-  }
-
-  private List<ServerAddress> _serverAddresses;
-  private String _dbName;
-
-  public Mongo() {
+  /**
+   *
+   */
+  public HazelCast() {
+    // TODO Auto-generated constructor stub
   }
 }

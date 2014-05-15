@@ -45,6 +45,10 @@ import static org.Cherry.Configuration.ConfigurationConstants.WELCOME_DOC;
 import static org.Cherry.Utils.Utils.isNotEmpty;
 import static org.Cherry.Utils.Utils.isPositive;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,14 +57,18 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.Cherry.Configuration.Hazelcast.HazelCast;
 import org.Cherry.Configuration.MongoDB.ServerAddress;
 import org.Cherry.Core.ServiceTemplate;
 import org.Cherry.Main.ApplicationKey;
 import org.Cherry.Main.ApplicationRepositoryService;
 
+import com.hazelcast.config.Config;
+import com.hazelcast.config.XmlConfigBuilder;
+
 /**
  * @author Cristian.Malinescu
- * 
+ *
  */
 @Singleton
 public class ConfigurationService extends ServiceTemplate {
@@ -167,6 +175,28 @@ public class ConfigurationService extends ServiceTemplate {
       return getConfiguration().getMongo().getDbName();
 
     return DB_NAME;
+  }
+
+  private HazelCast getHazelcast() {
+    return getConfiguration().getHazelcast();
+  }
+
+  private InputStream getHazelcastConfig() {
+    try {
+      return new FileInputStream(new File(getHazelcast().getConfigFile()));
+    } catch (final FileNotFoundException err) {
+      throw new IllegalStateException(err);
+    }
+  }
+
+  public Config getConfig() {
+    try {
+      return new XmlConfigBuilder(getHazelcastConfig()).build();
+    } catch (final Throwable t) {
+        error(t, t.getMessage());
+    }
+
+    return new XmlConfigBuilder().build();
   }
 
   private Configuration getConfiguration() {

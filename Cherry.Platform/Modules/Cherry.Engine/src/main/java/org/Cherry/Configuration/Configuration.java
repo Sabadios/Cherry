@@ -34,6 +34,7 @@ package org.Cherry.Configuration;
 
 import java.io.Serializable;
 
+import org.Cherry.Configuration.Hazelcast.HazelCast;
 import org.Cherry.Configuration.MongoDB.Mongo;
 
 /**
@@ -90,9 +91,18 @@ public class Configuration implements Serializable {
     _mongo = mongo;
   }
 
+  public HazelCast getHazelcast() {
+    return _hazelcast;
+  }
+
+  public void setHazelcast(final HazelCast hazelcast) {
+    _hazelcast = hazelcast;
+  }
+
   private Concurrency _concurrency;
   private Web _web;
   private Mongo _mongo;
+  private HazelCast _hazelcast;
 
   private String _profile, _version;
 

@@ -45,7 +45,9 @@ import javax.inject.Singleton;
 
 import org.Cherry.Core.ServiceTemplate;
 import org.Cherry.Modules.Freemarker.Middleware.FreeMarkerService;
+import org.Cherry.Modules.Hazelcast.Middleware.HazelcastService;
 import org.Cherry.Modules.Mongo.Middleware.MongoRepositoryService;
+import org.Cherry.Modules.Web.Engine.EnvironmentManager;
 import org.Cherry.Modules.Web.Engine.WebEngineManager;
 
 /**
@@ -56,7 +58,9 @@ import org.Cherry.Modules.Web.Engine.WebEngineManager;
 public class ApplicationContextService extends ServiceTemplate {
   public void start() {
     getMongoRepositoryService().setup();
+    getHazelcastService().setup();
     getFreeMarkerService().setup();
+    getEnvironmentManager().setup();
 
     getExecutorService().execute(getWebEngineManager().getRequestWorkerManager());
 
@@ -90,8 +94,23 @@ public class ApplicationContextService extends ServiceTemplate {
   }
 
   public MongoRepositoryService getMongoRepositoryService() {
+    assert null != _mongoRepositoryService;
     return _mongoRepositoryService;
   }
+
+  public EnvironmentManager getEnvironmentManager() {
+    assert null != _environmentManager;
+    return _environmentManager;
+  }
+
+  private HazelcastService getHazelcastService() {
+    assert null != _hazelcastService;
+    return _hazelcastService;
+  }
+
+  @Inject
+  @Singleton
+  private EnvironmentManager _environmentManager;
 
   @Inject
   @Singleton
@@ -108,6 +127,10 @@ public class ApplicationContextService extends ServiceTemplate {
   @Inject
   @Singleton
   private MongoRepositoryService _mongoRepositoryService;
+
+  @Inject
+  @Singleton
+  private HazelcastService _hazelcastService;
 
   @PostConstruct
   protected void postConstruct() {
