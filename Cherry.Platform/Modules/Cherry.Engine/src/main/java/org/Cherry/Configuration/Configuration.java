@@ -34,6 +34,8 @@ package org.Cherry.Configuration;
 
 import java.io.Serializable;
 
+import org.Cherry.Configuration.MongoDB.Mongo;
+
 /**
  * @author Cristian.Malinescu
  * 
@@ -80,8 +82,17 @@ public class Configuration implements Serializable {
     _web = web;
   }
 
+  public Mongo getMongo() {
+    return _mongo;
+  }
+
+  public void setMongo(final Mongo mongo) {
+    _mongo = mongo;
+  }
+
   private Concurrency _concurrency;
   private Web _web;
+  private Mongo _mongo;
 
   private String _profile, _version;
 

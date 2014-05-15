@@ -178,7 +178,7 @@ public abstract class Application extends ServiceTemplate {
   private Set<String> getJSONAgentsNamespaces() {
     if (null == _jsonAgentsNamespaces) {
       _jsonAgentsNamespaces = new HashSet<String>(_systemJSONAgents);
-      _jsonAgentsNamespaces.addAll(getConfiguration().getWeb().getControllerNamespaces());
+      _jsonAgentsNamespaces.addAll(getConfiguration().getWeb().getRouting().getControllerNamespaces());
     }
 
     return _jsonAgentsNamespaces;

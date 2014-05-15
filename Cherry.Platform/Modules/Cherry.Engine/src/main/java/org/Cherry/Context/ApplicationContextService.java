@@ -45,6 +45,7 @@ import javax.inject.Singleton;
 
 import org.Cherry.Core.ServiceTemplate;
 import org.Cherry.Modules.Freemarker.Middleware.FreeMarkerService;
+import org.Cherry.Modules.Mongo.Middleware.MongoRepositoryService;
 import org.Cherry.Modules.Web.Engine.WebEngineManager;
 
 /**
@@ -54,6 +55,7 @@ import org.Cherry.Modules.Web.Engine.WebEngineManager;
 @Singleton
 public class ApplicationContextService extends ServiceTemplate {
   public void start() {
+    getMongoRepositoryService().setup();
     getFreeMarkerService().setup();
 
     getExecutorService().execute(getWebEngineManager().getRequestWorkerManager());
@@ -87,6 +89,10 @@ public class ApplicationContextService extends ServiceTemplate {
     return _freeMarkerService;
   }
 
+  public MongoRepositoryService getMongoRepositoryService() {
+    return _mongoRepositoryService;
+  }
+
   @Inject
   @Singleton
   private WebEngineManager _webEngineManager;
@@ -98,6 +104,10 @@ public class ApplicationContextService extends ServiceTemplate {
   @Inject
   @Singleton
   private FreeMarkerService _freeMarkerService;
+
+  @Inject
+  @Singleton
+  private MongoRepositoryService _mongoRepositoryService;
 
   @PostConstruct
   protected void postConstruct() {

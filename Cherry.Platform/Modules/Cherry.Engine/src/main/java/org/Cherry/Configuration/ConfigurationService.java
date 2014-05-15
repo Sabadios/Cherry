@@ -36,6 +36,7 @@ import static org.Cherry.Configuration.ConfigurationConstants.COOKIE_DOMAIN;
 import static org.Cherry.Configuration.ConfigurationConstants.COOKIE_PATH;
 import static org.Cherry.Configuration.ConfigurationConstants.COOKIE_TTL;
 import static org.Cherry.Configuration.ConfigurationConstants.COOKIE_VERSION;
+import static org.Cherry.Configuration.ConfigurationConstants.DB_NAME;
 import static org.Cherry.Configuration.ConfigurationConstants.DOC_ROOT;
 import static org.Cherry.Configuration.ConfigurationConstants.HTTP_PORT;
 import static org.Cherry.Configuration.ConfigurationConstants.MAX_POST_SIZE;
@@ -44,11 +45,15 @@ import static org.Cherry.Configuration.ConfigurationConstants.WELCOME_DOC;
 import static org.Cherry.Utils.Utils.isNotEmpty;
 import static org.Cherry.Utils.Utils.isPositive;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.Cherry.Configuration.MongoDB.ServerAddress;
 import org.Cherry.Core.ServiceTemplate;
 import org.Cherry.Main.ApplicationKey;
 import org.Cherry.Main.ApplicationRepositoryService;
@@ -148,6 +153,20 @@ public class ConfigurationService extends ServiceTemplate {
       return getConfiguration().getWeb().getServerSessions();
 
     return false;
+  }
+
+  public List<ServerAddress> getServerAddresses() {
+    if (null != getConfiguration().getMongo().getServerAddresses())
+      return getConfiguration().getMongo().getServerAddresses();
+
+    return Collections.emptyList();
+  }
+
+  public String getDBName() {
+    if (isNotEmpty(getConfiguration().getMongo().getDbName()))
+      return getConfiguration().getMongo().getDbName();
+
+    return DB_NAME;
   }
 
   private Configuration getConfiguration() {

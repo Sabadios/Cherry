@@ -34,19 +34,23 @@ package org.Cherry.Modules.Mongo.Middleware;
 
 import static org.Cherry.Utils.Utils.failIfEmpty;
 
-import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.Cherry.Configuration.ConfigurationService;
 import org.Cherry.Core.ServiceTemplate;
 
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoServerSelectionException;
+import com.mongodb.ServerAddress;
 
 @Singleton
 public class MongoRepositoryService extends ServiceTemplate {
@@ -55,14 +59,12 @@ public class MongoRepositoryService extends ServiceTemplate {
     return getMongo().getDB(name);
   }
 
-  @PostConstruct
-  void postConstruct() {
-    try {
-      setMongo(new MongoClient());
-    } catch (final UnknownHostException e) {
-      error(e, "");
-      throw new IllegalStateException(e);
-    }
+  public DB getDB() {
+    return getDB(getDBName());
+  }
+
+  public void setup() {
+    setMongo(new MongoClient(getServerAddresses()));
 
     info("Using Mongo connector version [{}].", getMongo().getVersion());
 
@@ -91,10 +93,38 @@ public class MongoRepositoryService extends ServiceTemplate {
     }
   }
 
+  private List<ServerAddress> getServerAddresses() {
+    final List<org.Cherry.Configuration.MongoDB.ServerAddress> addresses = getConfigurationService().getServerAddresses();
+    final List<ServerAddress> serverAddresses = new LinkedList<ServerAddress>();
+
+    if (null != addresses && !addresses.isEmpty())
+      for (final org.Cherry.Configuration.MongoDB.ServerAddress address : addresses)
+        serverAddresses.add(address.asServerAddress());
+
+    return serverAddresses;
+  }
+
+  private String getDBName() {
+    return getConfigurationService().getDBName();
+  }
+
+  @PostConstruct
+  void postConstruct() {
+  }
+
+  private ConfigurationService getConfigurationService() {
+    assert null != _configurationService;
+    return _configurationService;
+  }
+
   @PreDestroy
   void preDestroy() {
     getMongo().close();
   }
+
+  @Inject
+  @Singleton
+  private ConfigurationService _configurationService;
 
   private MongoClient _mongo;
 

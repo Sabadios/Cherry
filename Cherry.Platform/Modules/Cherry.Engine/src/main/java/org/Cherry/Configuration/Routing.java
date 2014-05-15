@@ -32,26 +32,39 @@
  *******************************************************************************/
 package org.Cherry.Configuration;
 
-import static org.Cherry.Modules.Web.WebConstants.ROOT_URI;
-import static org.Cherry.Utils.Utils.path;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-public abstract class ConfigurationConstants {
-  static public final String USER_HOME = System.getProperty("user.home");
-  static public final String USER_DIR = System.getProperty("user.dir");
-  static public final Integer HTTP_PORT = 8080, COOKIE_VERSION = 1, MAX_POST_SIZE = 2 * 1024 * 1024;
-  static public final Long COOKIE_TTL = 60L;
-  static public final String WELCOME_DOC = "index.html", SESSION_COOKIE = "JSESSIONID", COOKIE_DOMAIN = "localhost", COOKIE_PATH = ROOT_URI, DB_NAME = "test";
-  static public final String ROOT_SGMNT = USER_HOME,
-      HOME_SGMNT = ".sabadios",
-      PLATFORM_SGMNT = ".platform",
-      DOMAIN_SGMNT = ".http",
-      MODULE_SGMNT = ".server",
-      DOC_ROOT_SGMNT = "www",
-      SERVER_HOME = path(ROOT_SGMNT, HOME_SGMNT, PLATFORM_SGMNT, DOMAIN_SGMNT, MODULE_SGMNT),
-      SERVER_CONFIG = "server-config.json",
-      DOC_ROOT = path(SERVER_HOME, DOC_ROOT_SGMNT);
-
-  private ConfigurationConstants() {
-    throw new IllegalStateException();
+/**
+ * @author Cristian.Malinescu
+ * 
+ */
+public class Routing implements Serializable {
+  public Set<String> getControllerNamespaces() {
+    if (null == _controllerNamespaces)
+      _controllerNamespaces = new HashSet<String>();
+    return _controllerNamespaces;
   }
+
+  public void seControllerNamespaces(final Set<String> controllerNamespaces) {
+    _controllerNamespaces = controllerNamespaces;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("Configuration");
+
+    return sb.toString();
+  }
+
+  private Set<String> _controllerNamespaces;
+
+  /**
+   *
+   */
+  public Routing() {
+  }
+
+  private static final long serialVersionUID = 1L;
 }

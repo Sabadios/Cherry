@@ -33,7 +33,6 @@
 package org.Cherry.Configuration;
 
 import java.io.Serializable;
-import java.util.Set;
 
 /**
  * @author Cristian.Malinescu
@@ -48,12 +47,12 @@ public class Web implements Serializable {
     _httpPort = httpPort;
   }
 
-  public Set<String> getControllerNamespaces() {
-    return _controllerNamespaces;
+  public Routing getRouting() {
+    return _routing;
   }
 
-  public void setControllerNamespaces(final Set<String> controllerNamespaces) {
-    _controllerNamespaces = controllerNamespaces;
+  public void setRouting(final Routing routing) {
+    _routing = routing;
   }
 
   public String getDocRoot() {
@@ -108,7 +107,7 @@ public class Web implements Serializable {
   private String _docRoot, _welcomeDoc;
   private Integer _httpPort, _maxPostSize;
   private Boolean _serverSessions;
-  private Set<String> _controllerNamespaces;
+  private Routing _routing;
 
   /**
    *
