@@ -223,6 +223,8 @@ public final class UserService extends ServiceTemplate {
   * May 13th 2014 - We applied for Maven Central hosting!
   * May 14th 2014 - Maven Central repository hosting and deployments granted!
   * May 15th 2014 - Externalized Mongo and Hazelcast configurations. Heading for a build for Maven Central.
+  * June 3rd 2014 - Implemented security backbone. Upgraded Mongo persistence to Morphia  
+                    https://github.com/mongodb/morphia. Up-to-date various subsystems. Preparing for file-upload support.
 
  
 
