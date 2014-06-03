@@ -32,11 +32,12 @@
  *******************************************************************************/
 package org.Cherry.Modules.Web.Engine;
 
-import static org.Cherry.Modules.Web.Engine.HttpContextKey.Session_Cookie_Path_Hit;
-import static org.Cherry.Modules.Web.Engine.HttpContextKey.Session_Cookie_Present;
+import static org.Cherry.Modules.Web.Engine.HttpContextKey.Authenticated;
+import static org.Cherry.Modules.Web.Engine.HttpContextKey.CreateCookie;
 import static org.Cherry.Modules.Web.HttpHeaderKey.Cookie;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 import javax.annotation.PostConstruct;
@@ -46,13 +47,19 @@ import javax.inject.Singleton;
 
 import org.Cherry.Configuration.ConfigurationService;
 import org.Cherry.Core.ServiceTemplate;
-import org.Cherry.Modules.Web.TamperedCookieException;
+import org.Cherry.Modules.Jackson.Middleware.ObjectMapperService;
+import org.Cherry.Modules.Security.Middleware.UserRepository;
+import org.Cherry.Modules.Security.Model.User;
+import org.Cherry.Modules.Web.Engine.InvocationContext.Key;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderIterator;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.auth.InvalidCredentialsException;
 import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
@@ -65,54 +72,111 @@ class RequestInterceptor extends ServiceTemplate implements HttpRequestIntercept
    * @see org.apache.http.HttpRequestInterceptor#process(org.apache.http.HttpRequest, org.apache.http.protocol.HttpContext)
    */
   @Override
-  public void process(final HttpRequest request, final HttpContext context) throws HttpException, IOException {
+  public void process(final HttpRequest request, final HttpContext context) throws HttpException, IOException, InvalidCredentialsException {
     log.debug("Intercepted request [{}] with URI [{}] for context [{}].", request, request.getRequestLine().getUri(), context);
 
-    if (request instanceof BasicHttpRequest) {
-      if (isDebugEnabled())
-        getTracerService().examine(request);
+    final Boolean authenticated = authenticate(request, context);
 
-      if (isSessionCookiePathHit(request)) {
-        context.setAttribute(Session_Cookie_Path_Hit, Boolean.TRUE);
+    context.setAttribute(Authenticated, authenticated);
+    Context.instance().getInvocationContext().set(Key.Authenticated, authenticated);
 
-        final WeakReference<HeaderIterator> headerIterator = new WeakReference<HeaderIterator>(request.headerIterator(Cookie));
+    if (request instanceof BasicHttpRequest) if (isDebugEnabled())
+      getTracerService().examine(request);
+  }
 
-        Header header;
-        HeaderElement[] elements;
-        String value;
+  static final String openGateRESTCmd = "/gate/open";
 
-        while (headerIterator.get().hasNext()) {
-          header = headerIterator.get().nextHeader();
+  private Boolean authenticate(final HttpRequest request, final HttpContext context) throws InvalidCredentialsException {
+    context.setAttribute(CreateCookie, false);
 
-          elements = header.getElements();
+    if (isOpenGateMessage(request)) {
+      final User identity = getUser(request);
 
-          for (final HeaderElement element : elements)
-            if (getSessionCookie().equalsIgnoreCase(element.getName())) {
-              value = element.getValue();
+      if (null == authenticate(identity)) {
+        context.setAttribute(CreateCookie, true);
+        return true;
+      }
 
-              if (isTampered(value))
-                throw new TamperedCookieException();
-              else context.setAttribute(Session_Cookie_Present, Boolean.TRUE);
-
-              return;
-            }
-        }
-      } else context.setAttribute(Session_Cookie_Path_Hit, Boolean.FALSE);
+      return false;
     }
 
-    context.setAttribute(Session_Cookie_Present, Boolean.FALSE);
+    if (isCookiePathHit(request)) {
+      final WeakReference<HeaderIterator> headerIterator = new WeakReference<HeaderIterator>(request.headerIterator(Cookie));
+
+      Header header;
+      HeaderElement[] elements;
+      String value;
+
+      while (headerIterator.get().hasNext()) {
+        header = headerIterator.get().nextHeader();
+
+        elements = header.getElements();
+
+        for (final HeaderElement element : elements)
+          if (getSessionCookie().equalsIgnoreCase(element.getName())) {
+            value = element.getValue();
+
+            if (!isTampered(value))
+              return true;
+            else return false;
+          }
+      }
+
+      return false;
+    }
+
+    throw new IllegalStateException("Unknown execution context!");
   }
 
-  private Boolean isSessionCookiePathHit(final HttpRequest request) {
-    final String regex = new StringBuilder(getSessionCookiePath()).append(REGEX_PATTERN).toString();
-    final WeakReference<String> path = new WeakReference<String>(regex);
-    return request.getRequestLine().getUri().matches(path.get());
+  protected User getUser(final HttpRequest request) {
+    User result = null;
+
+    if (request instanceof HttpEntityEnclosingRequest) {
+      final HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
+
+      final long contentLength = entity.getContentLength();
+
+      if (0 < contentLength) {
+        WeakReference<InputStream> is;
+
+        try {
+          is = new WeakReference<InputStream>(entity.getContent());
+        } catch (IllegalStateException | IOException err) {
+          throw new IllegalStateException(err);
+        }
+
+        try {
+          result = getObjectMapperService().readValue(is.get(), User.class);
+        } catch (final IOException err) {
+          throw new IllegalStateException(err);
+        }
+      } else warn("{}", "Undefined content/length 0! Did the sender missed it?!");
+    } else throw new IllegalArgumentException("Expected request of type [" + HttpEntityEnclosingRequest.class + "] but found [" + request.getClass() + "]");
+
+    return result;
   }
+
+  private Boolean isOpenGateMessage(final HttpRequest request) {
+    return openGateRESTCmd.equalsIgnoreCase(request.getRequestLine().getUri());
+  }
+
+  private Boolean isCookiePathHit(final HttpRequest request) {
+    if (null == cookiePathRegEx)
+      cookiePathRegEx = new StringBuilder(getSessionCookiePath()).append(REGEX_PATTERN).toString();
+
+    return request.getRequestLine().getUri().matches(cookiePathRegEx);
+  }
+
+  private String cookiePathRegEx = null;
 
   private static final String REGEX_PATTERN = ".*";
 
   private Boolean isTampered(final String value) {
     return false;
+  }
+
+  private InvalidCredentialsException authenticate(final User user) {
+    return getUserRepository().authenticate(user);
   }
 
   private String getSessionCookiePath() {
@@ -133,6 +197,20 @@ class RequestInterceptor extends ServiceTemplate implements HttpRequestIntercept
     return _tracerService;
   }
 
+  private UserRepository getUserRepository() {
+    assert null != _userRepository;
+    return _userRepository;
+  }
+
+  protected ObjectMapperService getObjectMapperService() {
+    assert null != _objectMapperService;
+    return _objectMapperService;
+  }
+
+  @Inject
+  @Singleton
+  private ObjectMapperService _objectMapperService;
+
   @Inject
   @Singleton
   private ConfigurationService _configurationService;
@@ -140,6 +218,10 @@ class RequestInterceptor extends ServiceTemplate implements HttpRequestIntercept
   @Inject
   @Singleton
   private TracerService _tracerService;
+
+  @Inject
+  @Singleton
+  private UserRepository _userRepository;
 
   @PostConstruct
   void postConstruct() {

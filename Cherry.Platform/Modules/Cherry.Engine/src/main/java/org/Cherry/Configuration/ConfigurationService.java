@@ -68,7 +68,7 @@ import com.hazelcast.config.XmlConfigBuilder;
 
 /**
  * @author Cristian.Malinescu
- *
+ * 
  */
 @Singleton
 public class ConfigurationService extends ServiceTemplate {
@@ -177,6 +177,10 @@ public class ConfigurationService extends ServiceTemplate {
     return DB_NAME;
   }
 
+  public Digest getDigest() {
+    return getConfiguration().getSecurity().getCrypto().getDigest();
+  }
+
   private HazelCast getHazelcast() {
     return getConfiguration().getHazelcast();
   }
@@ -193,7 +197,7 @@ public class ConfigurationService extends ServiceTemplate {
     try {
       return new XmlConfigBuilder(getHazelcastConfig()).build();
     } catch (final Throwable t) {
-        error(t, t.getMessage());
+      error(t, t.getMessage());
     }
 
     return new XmlConfigBuilder().build();

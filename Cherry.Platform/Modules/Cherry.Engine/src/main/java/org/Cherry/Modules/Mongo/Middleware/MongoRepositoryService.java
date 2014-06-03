@@ -126,17 +126,17 @@ public class MongoRepositoryService extends ServiceTemplate {
   @Singleton
   private ConfigurationService _configurationService;
 
-  private MongoClient _mongo;
-
-  public MongoRepositoryService() {
-  }
-
-  private MongoClient getMongo() {
+  public MongoClient getMongo() {
     return _mongo;
   }
 
   private void setMongo(final MongoClient mongo) {
     _mongo = mongo;
+  }
+
+  private MongoClient _mongo;
+
+  public MongoRepositoryService() {
   }
 
   static public final String DEFAULT_DB_NAME = "test";

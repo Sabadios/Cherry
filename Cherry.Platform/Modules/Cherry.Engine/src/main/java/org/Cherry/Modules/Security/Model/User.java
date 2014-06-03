@@ -30,37 +30,74 @@
  * Contributors:
  * Cristian Malinescu - initial design, API and implementation
  *******************************************************************************/
-package org.Cherry.Modules.Web;
+package org.Cherry.Modules.Security.Model;
 
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.Cherry.Modules.Mongo.Model.EntityTemplate;
+import org.mongodb.morphia.annotations.Entity;
 
-public class BasicServerCookie extends BasicClientCookie {
+/**
+ * @author Cristian.Malinescu
+ * 
+ */
+@Entity
+public class User extends EntityTemplate {
+  public String getName() {
+    return name;
+  }
+
+  public void setName(final String _name) {
+    assert null != _name && 8 <= _name.trim().length();
+    name = _name;
+  }
+
+  public String getParole() {
+    return parole;
+  }
+
+  public void setParole(final String _parole) {
+    assert null != _parole && 8 <= _parole.trim().length();
+    parole = _parole;
+  }
+
   @Override
-  public Object clone() throws CloneNotSupportedException {
-    final BasicServerCookie clone = (BasicServerCookie) super.clone();
-    return clone;
+  public int hashCode() {
+    return getName().hashCode();
+  }
+
+  @Override
+  public boolean equals(final Object other) {
+    if (this == other)
+      return true;
+
+    if (other instanceof User) {
+      final User that = (User) other;
+      return getName().equals(that.getName());
+    }
+
+    return false;
   }
 
   @Override
   public String toString() {
-    final StringBuilder cookieVal = new StringBuilder(getName()).append("=").append(getValue())
-        .append("; Path=").append(getPath())
-        .append("; Domain=").append(getDomain())
-        .append("; Version=").append(getVersion())
-        .append("; Expires=").append(getExpiryDate())
-        .append(isSecure() ? "; Secure" : "");
+    final StringBuilder sb = new StringBuilder("{User:{");
+    sb.append("'name':'").append(getName()).append("', 'parole':'").append(getParole()).append("'");
 
-    return cookieVal.toString();
+    sb.append("}}");
+
+    return sb.toString();
   }
 
-  public BasicServerCookie(final String name, final String value) {
-    super(name, value);
-    log.debug("{'{}':'{}'}", getName(), getValue());
+  private String name, parole;
+
+  public User(final String name, final String parole) {
+    setName(name);
+    setParole(parole);
   }
 
-  static private final Logger log = LoggerFactory.getLogger(BasicServerCookie.class);
+  public User() {
+  }
+
+  static public final String TYPE_ID = User.class.getCanonicalName();
 
   private static final long serialVersionUID = 1L;
 }

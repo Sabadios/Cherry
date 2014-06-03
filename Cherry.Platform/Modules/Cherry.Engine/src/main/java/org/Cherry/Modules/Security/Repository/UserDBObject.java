@@ -30,37 +30,35 @@
  * Contributors:
  * Cristian Malinescu - initial design, API and implementation
  *******************************************************************************/
-package org.Cherry.Modules.Web;
+package org.Cherry.Modules.Security.Repository;
 
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.Cherry.Modules.Security.Model.User;
 
-public class BasicServerCookie extends BasicClientCookie {
-  @Override
-  public Object clone() throws CloneNotSupportedException {
-    final BasicServerCookie clone = (BasicServerCookie) super.clone();
-    return clone;
+import com.mongodb.BasicDBObject;
+
+/**
+ * @author Cristian.Malinescu
+ * 
+ */
+public final class UserDBObject extends BasicDBObject {
+  /**
+  *
+  */
+  public UserDBObject(final User user) {
+    assert null != user;
+    put("name", user.getName());
+    put("parole", user.getParole());
   }
 
-  @Override
-  public String toString() {
-    final StringBuilder cookieVal = new StringBuilder(getName()).append("=").append(getValue())
-        .append("; Path=").append(getPath())
-        .append("; Domain=").append(getDomain())
-        .append("; Version=").append(getVersion())
-        .append("; Expires=").append(getExpiryDate())
-        .append(isSecure() ? "; Secure" : "");
-
-    return cookieVal.toString();
+  public User asUser() {
+    return new User(getString("id"), getString("parole"));
   }
 
-  public BasicServerCookie(final String name, final String value) {
-    super(name, value);
-    log.debug("{'{}':'{}'}", getName(), getValue());
+  /**
+   *
+   */
+  public UserDBObject() {
   }
-
-  static private final Logger log = LoggerFactory.getLogger(BasicServerCookie.class);
 
   private static final long serialVersionUID = 1L;
 }

@@ -99,10 +99,19 @@ public class Configuration implements Serializable {
     _hazelcast = hazelcast;
   }
 
+  public Security getSecurity() {
+    return _security;
+  }
+
+  public void setSecurity(final Security security) {
+    _security = security;
+  }
+
   private Concurrency _concurrency;
   private Web _web;
   private Mongo _mongo;
   private HazelCast _hazelcast;
+  private Security _security;
 
   private String _profile, _version;
 

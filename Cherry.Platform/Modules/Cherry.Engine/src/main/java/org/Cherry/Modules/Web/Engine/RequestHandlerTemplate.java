@@ -176,7 +176,9 @@ abstract class RequestHandlerTemplate extends ServiceTemplate implements IReques
 
       if (0 < contentLength) {
         final WeakReference<InputStream> is = new WeakReference<InputStream>(entity.getContent());
-        result = getObjectMapperService().readValue(is.get(), beanParameterType);
+
+        if (0 < is.get().available())
+          result = getObjectMapperService().readValue(is.get(), beanParameterType);
       } else warn("{}", "Undefined content/length 0! Did the sender missed it?!");
     } else throw new IllegalArgumentException("Expected request of type [" + HttpEntityEnclosingRequest.class + "] but found [" + request.getClass() + "]");
 

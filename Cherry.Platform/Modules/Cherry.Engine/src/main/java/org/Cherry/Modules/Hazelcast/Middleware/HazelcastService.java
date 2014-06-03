@@ -51,8 +51,10 @@ import com.hazelcast.core.ClientService;
 import com.hazelcast.core.Cluster;
 import com.hazelcast.core.DistributedObject;
 import com.hazelcast.core.DistributedObjectListener;
+import com.hazelcast.core.Endpoint;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IAtomicLong;
+import com.hazelcast.core.IAtomicReference;
 import com.hazelcast.core.ICountDownLatch;
 import com.hazelcast.core.IExecutorService;
 import com.hazelcast.core.IList;
@@ -67,6 +69,7 @@ import com.hazelcast.core.LifecycleService;
 import com.hazelcast.core.MultiMap;
 import com.hazelcast.core.PartitionService;
 import com.hazelcast.logging.LoggingService;
+import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.transaction.TransactionContext;
 import com.hazelcast.transaction.TransactionException;
 import com.hazelcast.transaction.TransactionOptions;
@@ -431,4 +434,18 @@ public class HazelcastService extends ServiceTemplate implements HazelcastInstan
   public HazelcastService() {
   }
 
+  @Override
+  public JobTracker getJobTracker(final String name) {
+    return getHazelcastInstance().getJobTracker(name);
+  }
+
+  @Override
+  public Endpoint getLocalEndpoint() {
+    return getHazelcastInstance().getLocalEndpoint();
+  }
+
+  @Override
+  public <E> IAtomicReference<E> getAtomicReference(final String name) {
+    return getHazelcastInstance().getAtomicReference(name);
+  }
 }

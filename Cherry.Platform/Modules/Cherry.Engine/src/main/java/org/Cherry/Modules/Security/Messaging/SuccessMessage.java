@@ -30,37 +30,17 @@
  * Contributors:
  * Cristian Malinescu - initial design, API and implementation
  *******************************************************************************/
-package org.Cherry.Modules.Web;
+package org.Cherry.Modules.Security.Messaging;
 
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.Cherry.Modules.Web.Agents.Model.SuccessMessageTemplate;
 
-public class BasicServerCookie extends BasicClientCookie {
-  @Override
-  public Object clone() throws CloneNotSupportedException {
-    final BasicServerCookie clone = (BasicServerCookie) super.clone();
-    return clone;
+/**
+ * @author Cristian.Malinescu
+ * 
+ */
+public final class SuccessMessage extends SuccessMessageTemplate {
+  public SuccessMessage() {
   }
-
-  @Override
-  public String toString() {
-    final StringBuilder cookieVal = new StringBuilder(getName()).append("=").append(getValue())
-        .append("; Path=").append(getPath())
-        .append("; Domain=").append(getDomain())
-        .append("; Version=").append(getVersion())
-        .append("; Expires=").append(getExpiryDate())
-        .append(isSecure() ? "; Secure" : "");
-
-    return cookieVal.toString();
-  }
-
-  public BasicServerCookie(final String name, final String value) {
-    super(name, value);
-    log.debug("{'{}':'{}'}", getName(), getValue());
-  }
-
-  static private final Logger log = LoggerFactory.getLogger(BasicServerCookie.class);
 
   private static final long serialVersionUID = 1L;
 }

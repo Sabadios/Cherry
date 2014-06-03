@@ -30,37 +30,61 @@
  * Contributors:
  * Cristian Malinescu - initial design, API and implementation
  *******************************************************************************/
-package org.Cherry.Modules.Web;
+package org.Cherry.Modules.Security.Middleware;
 
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public class BasicServerCookie extends BasicClientCookie {
-  @Override
-  public Object clone() throws CloneNotSupportedException {
-    final BasicServerCookie clone = (BasicServerCookie) super.clone();
-    return clone;
+import org.Cherry.Core.ServiceTemplate;
+import org.Cherry.Modules.Mongo.Middleware.MongoRepositoryService;
+import org.Cherry.Modules.Mongo.Morphia.MorphiaService;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
+
+import com.mongodb.WriteConcern;
+
+/**
+ * @author Cristian.Malinescu
+ * 
+ */
+public abstract class MorphiaRepositoryTemplate extends ServiceTemplate {
+  protected <T> Query<T> createQuery(final Class<T> type) {
+    return getDatastore().createQuery(type);
   }
 
-  @Override
-  public String toString() {
-    final StringBuilder cookieVal = new StringBuilder(getName()).append("=").append(getValue())
-        .append("; Path=").append(getPath())
-        .append("; Domain=").append(getDomain())
-        .append("; Version=").append(getVersion())
-        .append("; Expires=").append(getExpiryDate())
-        .append(isSecure() ? "; Secure" : "");
-
-    return cookieVal.toString();
+  protected <T> Key<T> persist(final T entity) {
+    return persist(entity, WriteConcern.ACKNOWLEDGED);
   }
 
-  public BasicServerCookie(final String name, final String value) {
-    super(name, value);
-    log.debug("{'{}':'{}'}", getName(), getValue());
+  protected <T> Key<T> persist(final T entity, final WriteConcern wc) {
+    return getDatastore().save(entity, wc);
   }
 
-  static private final Logger log = LoggerFactory.getLogger(BasicServerCookie.class);
+  protected Datastore getDatastore() {
+    return getMorphia().getDatastore();
+  }
+
+  protected MongoRepositoryService getMongoRepository() {
+    assert null != _mongoRepository;
+    return _mongoRepository;
+  }
+
+  protected MorphiaService getMorphia() {
+    assert null != _morphia;
+    return _morphia;
+  }
+
+  @Inject
+  @Singleton
+  private MongoRepositoryService _mongoRepository;
+
+  @Inject
+  @Singleton
+  private MorphiaService _morphia;
+
+  public MorphiaRepositoryTemplate() {
+  }
 
   private static final long serialVersionUID = 1L;
 }

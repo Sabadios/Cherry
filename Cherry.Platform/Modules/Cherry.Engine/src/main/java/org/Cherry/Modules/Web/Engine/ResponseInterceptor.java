@@ -32,13 +32,14 @@
  *******************************************************************************/
 package org.Cherry.Modules.Web.Engine;
 
-import static org.Cherry.Modules.Web.Engine.HttpContextKey.Session_Cookie_Path_Hit;
-import static org.Cherry.Modules.Web.Engine.HttpContextKey.Session_Cookie_Present;
+import static org.Cherry.Modules.Web.Engine.HttpContextKey.Authenticated;
+import static org.Cherry.Modules.Web.Engine.HttpContextKey.CreateCookie;
 import static org.Cherry.Modules.Web.HttpHeaderKey.Set_Cookie;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -58,33 +59,47 @@ import org.slf4j.Logger;
 
 /**
  * @author Cristian.Malinescu
- *
+ * 
  */
 @Singleton
 class ResponseInterceptor extends ServiceTemplate implements HttpResponseInterceptor {
   /*
    * (non-Javadoc)
-   *
+   * 
    * @see org.apache.http.HttpResponseInterceptor#process(org.apache.http.HttpResponse, org.apache.http.protocol.HttpContext)
    */
   @Override
   public void process(final HttpResponse response, final HttpContext context) throws HttpException, IOException {
     log.debug("Intercepted response [{}] for context [{}].", response, context);
 
-    final Boolean sessionCookiePresent = (Boolean) context.getAttribute(Session_Cookie_Present), sessionCookiePathHit = (Boolean) context.getAttribute(Session_Cookie_Path_Hit);
+    if (authenticated(context))
+      if (createCookie(context)) {
+        final WeakReference<BasicServerCookie> cookie = new WeakReference<BasicServerCookie>(new BasicServerCookie(getSessionCookie(),
+            getServerSessions() ? getSession().toString() : UUID.randomUUID().toString()));
 
-    if (!sessionCookiePresent && sessionCookiePathHit) {
-      final WeakReference<BasicServerCookie> cookie =
-          new WeakReference<BasicServerCookie>(new BasicServerCookie(getSessionCookie(),
-                                                                     getServerSessions() ? getSession().toString() : UUID.randomUUID().toString()));
+        cookie.get().setDomain(getSessionCookieDomain());
+        cookie.get().setPath(getSessionCookiePath());
+        cookie.get().setVersion(getSessionCookieVersion());
+        cookie.get().setSecure(true);
 
-      cookie.get().setDomain(getSessionCookieDomain());
-      cookie.get().setPath(getSessionCookiePath());
-      cookie.get().setVersion(getSessionCookieVersion());
-      cookie.get().setExpiryDate(new DateTime().plusMinutes(getSessionCookieTimeToLive().intValue()).toDate());
+        final Date expiryDate = new DateTime().plusMinutes(getSessionCookieTimeToLive().intValue()).toDate();
 
-      response.addHeader(Set_Cookie, cookie.get().toString());
-    }
+        cookie.get().setExpiryDate(expiryDate);
+
+        response.addHeader(Set_Cookie, cookie.get().toString());
+      }
+  }
+
+  private Boolean authenticated(final HttpContext context) {
+    final Object authenticated = context.getAttribute(Authenticated);
+
+    return null == authenticated ? false : (Boolean) authenticated;
+  }
+
+  private Boolean createCookie(final HttpContext context) {
+    final Object createCookie = context.getAttribute(CreateCookie);
+
+    return null == createCookie ? false : (Boolean) createCookie;
   }
 
   private String getSessionCookiePath() {
